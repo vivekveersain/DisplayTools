@@ -2,7 +2,7 @@
 """
 Created on Wed Apr  3 11:52:28 2019
 
-@author: Vievk V. Arya
+@author: Vievk V. Arya [github.com/vivekveersain]
 """
 
 import requests, os
