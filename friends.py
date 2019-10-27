@@ -28,7 +28,7 @@ class Friends:
         self.folder = 'Cleaned\\'
         self.alpha = re.compile('[^a-zA-Z\\s]')
         self.friends = ['Monica', 'Chandler', 'Joey','Phoebe','Ross', 'Rachel']
-    
+
     def download(self):
         get_text  = lambda link: bs4(requests.get(link).text).get_text().encode('ascii','ignore').decode()
         get_links = lambda link: [(line.get('href'), line.contents[0]) for line in bs4(requests.get(link).text).find_all('a', href = True)]
@@ -41,7 +41,7 @@ class Friends:
             print("\rDownloading... [%s]\t\t\t\t" % (name), end ='\r')
             with open(r'%s%s.txt'%(self.raw,name), 'w') as f:
                 f.write(get_text(home+link))
-    
+
     def clean(self):
         folder = self.folder
         for file in os.listdir(self.raw):
@@ -65,25 +65,25 @@ class Friends:
 
             data = ''.join([line for line in data if line is not  None])
             with open(folder+file, 'w') as f: f.write(data)
-    
+
     def freq_analysis(self):
         folder = self.folder
         files = os.listdir(folder)
         speakers = {}
-        for file in files: 
+        for file in files:
             with open(folder+file) as f: data = f.readlines()
             for line in data[9:]:
                 if ":" in line and line[0].isupper():
                     t = line.split(":")
                     speaker, sent = t[0].split('(')[0].strip().title(), self.alpha.sub('',':'.join(t[1:]).strip(" ").strip("\n").lower())
                     try:
-                        for word in sent.split(" "): 
+                        for word in sent.split(" "):
                             if word == '': continue
                             try:speakers[speaker][word] += 1
                             except:speakers[speaker][word] = 1
-                    except: 
+                    except:
                         speakers[speaker] = {}
-                        for word in sent.split(" "): 
+                        for word in sent.split(" "):
                             if word == '': continue
                             try:speakers[speaker][word] += 1
                             except:speakers[speaker][word] = 1
