@@ -5,7 +5,7 @@ Created on Wed Apr  3 11:52:28 2019
 @author: Vievk V. Arya [github.com/vivekveersain]
 """
 
-import requests, os
+import requests, os 
 from bs4 import BeautifulSoup as bs4
 import warnings
 import pandas as pd
