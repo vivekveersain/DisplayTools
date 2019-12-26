@@ -24,37 +24,39 @@ def show(df, n):
 class Friends:
     def __init__(self):
         print('F.R.I.E.N.D.S')
-        self.raw = 'Downloads\\'
-        self.folder = 'Cleaned\\'
+        self.raw = 'Downloads/'
+        self.folder = 'Cleaned/'
+        try: os.mkdir("Downloads")
+        except: pass
+        try: os.mkdir("Cleaned")
+        except: pass
         self.alpha = re.compile('[^a-zA-Z\\s]')
         self.friends = ['Monica', 'Chandler', 'Joey','Phoebe','Ross', 'Rachel']
 
     def download(self):
         get_text  = lambda link: bs4(requests.get(link).text).get_text().encode('ascii','ignore').decode()
         get_links = lambda link: [(line.get('href'), line.contents[0]) for line in bs4(requests.get(link).text).find_all('a', href = True)]
-
         home = 'https://fangj.github.io/friends/'
         links = get_links(home)
+        spaces = ''
         for link, name in links:
             name = name.strip().replace("  "," ").replace('"','')
             if int(name.split(" ")[0].split("-")[0])<999: name = '0'+name
-            print("\rDownloading... [%s]\t\t\t\t" % (name), end ='\r')
-            with open(r'%s%s.txt'%(self.raw,name), 'w') as f:
-                f.write(get_text(home+link))
+            print("\rDownloading... [%s]%s" % (name, spaces), end ='\r')
+            spaces = ' '*len(name)
+            if not os.path.isfile(r'%s%s.txt'%(self.raw,name)):
+                with open(r'%s%s.txt'%(self.raw,name), 'w') as f:
+                    f.write(get_text(home+link))
+            else: print("\rExists: %s%s.txt"%(self.raw,name), end = '\r')
 
     def clean(self):
         folder = self.folder
+        spaces = ''
         for file in os.listdir(self.raw):
-            print("\rCleaning... [%s]\t\t" % (file), end ='\r')
+            print("\rCleaning... [%s]%s" % (file, spaces), end ='\r')
+            spaces = ' '*len(file)
             with open(self.raw+file) as f: data = f.readlines()
             for r, line in enumerate(data):
-                """
-                if line == '\n' or r ==0 or line[0]=='(' or line == 'End' or line[:6]=='[Scene' : p = r
-                elif ': ' not in line or line[0].islower():
-                    data[p] = data[p].strip('\n')+ ' ' + data[r]
-                    data[r] = None
-                else: p = r
-                """
                 if line[0].isupper() and ": " in line and " : " not in line:
                     p = r
                 elif line == '\n': p = r
@@ -90,9 +92,9 @@ class Friends:
         return pd.DataFrame(speakers).fillna(0).astype(int).sort_values(by = friends.friends,ascending= False).reset_index().rename(columns = {'index':'word'})
 
 friends = Friends()
-#friends.download()
-#friends.clean()
-raw = friends.freq_analysis()
-df = raw[friends.friends+['word']]
-df = df[df.sum(axis = 1)>1]
-df[df.word.apply(lambda x : x in [n.lower() for n in friends.friends])]
+friends.download()
+friends.clean()
+#raw = friends.freq_analysis()
+#df = raw[friends.friends+['word']]
+#df = df[df.sum(axis = 1)>1]
+#df[df.word.apply(lambda x : x in [n.lower() for n in friends.friends])]
