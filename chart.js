@@ -3600,7 +3600,7 @@ quality format that can be printed and saved (see Help for browser compatibility
 	(
 		position + 5,
 '<input type="button" id="help" value="?"\
-onclick="window.open(\'https://github.com/marbl/wolf/wiki/Browsing%20wolf%20charts\', \'help\')"/>',
+onclick="window.open(\'https://github.com/\', \'help\')"/>',
 'Help'
 	);
 }
@@ -4767,7 +4767,7 @@ function load()
 	{
 		document.body.innerHTML = '\
 <br/>This browser does not support HTML5 (see \
-<a href="https://github.com/marbl/wolf/wiki/Browser%20support">Browser support</a>).\
+<a href="https://github.com/">Browser support</a>).\
 	';
 		return;
 	}
@@ -4776,7 +4776,7 @@ function load()
 	{
 		document.body.innerHTML = '\
 <br/>This browser does not support HTML5 canvas text (see \
-<a href="https://github.com/marbl/wolf/wiki/Browser%20support">Browser support</a>).\
+<a href="https://github.com/">Browser support</a>).\
 	';
 		return;
 	}
