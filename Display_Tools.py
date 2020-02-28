@@ -82,7 +82,7 @@ class Chart:
         try:
             with open('./chart.js', 'r') as src: self._start, self._end = src.read().split("<<<CONTENT_HERE>>>")
         except:
-            raw = requests.get("https://raw.githubusercontent.com/vivekveersain/MachineLearning/master/chart.js").content.decode()
+            raw = requests.get("https://raw.githubusercontent.com/vivekveersain/DisplayTools/master/chart.js").content.decode()
             self._start, self._end = raw.split("<<<CONTENT_HERE>>>")
             with open('./chart.js', 'w') as src: src.write(raw)
         self.proc = list('|/-\\')

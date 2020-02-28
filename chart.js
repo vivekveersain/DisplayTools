@@ -3473,7 +3473,7 @@ value="&harr;" title="Expand this wedge to become the new focus of the chart"/><
 
 	document.body.insertBefore(keyControl, canvas);
 
-	logoImage = 'https://raw.githubusercontent.com/vivekveersain/MachineLearning/master/icon.ico';
+	logoImage = 'https://raw.githubusercontent.com/vivekveersain/DisplayTools/master/icon.ico';
 
 
 //	document.getElementById('options').style.fontSize = '9pt';
