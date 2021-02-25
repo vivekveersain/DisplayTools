@@ -131,7 +131,7 @@ class Chart:
             print("\rProcessing... %s %s" % (self.proc[z], self._time_conversion(time.time() - self.start_time)), end = '')
             if key == '': continue
             string += '  '*current_level + self.make_node(key, round(lvl[key]["Value"], 2))
-            n_data = data.query("level == '%s'" % key).groupby("next_level").sum().reset_index().rename(columns = {"next_level":"level"})
+            n_data = data.query("level == '%s'" % key)[["next_level","Value"]].rename(columns = {"next_level":"level"})
             if n_data.level.apply(lambda x: len(x)).max() > 0: string = self.the_great_recursion(n_data, string, current_level + 1, z)
             string += '  '*current_level + self.close_node()
         return string
