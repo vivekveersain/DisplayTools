@@ -144,3 +144,71 @@ class Chart:
         self.node  = '<node name="%s"><magnitude><val>%s</val></magnitude><std_mag><val>%s</val></std_mag>\n'
         string = self.the_great_recursion(data, string, 1)
         with open(output_name,'w') as f: f.write(self._start + string + self._end)
+
+
+
+
+class ProgressBar:
+    def __init__(self, process_size, msg = '', bar_size = 50, output = sys.stdout):
+        if process_size == 0: return
+        self.bar_size = bar_size
+        self.output = output
+        self.msg = msg
+        self.process_size = process_size
+        self.bar_completion_ratio  = self.bar_size/self.process_size
+        self.r = 0
+        self.start_timer = time.time()
+        self._start(msg)
+
+        self._thread = threading.Thread(target=self._progress_bar)
+        self._thread.daemon = True
+        self._thread.start()
+
+    def _progress_bar(self):
+        while self.r < self.process_size:
+            self.display(self.r, self.msg)
+            time.sleep(1)
+
+        self.display(self.r, self.msg)
+        self._done()
+        try: self._thread._stop()
+        except: pass
+
+    def _display(self, content):
+        self.output.write(content)
+        self.output.flush()
+
+    def _time_conversion(self, secs):
+        secs = int(secs)
+        if secs < 3600: return '%02d:%02d' % (secs//60, secs%60)
+        return '%02d:%02d:%02d' % (secs//3600, (secs//60)%60, secs%60)
+
+    def _done(self): self._display("\n")
+
+    def _start(self, msg = ''):
+        content = "%s[>%s] 0/%d(00.00%%) [__:__<__:__] __it/sec   \r" % (msg, " "*self.bar_size, self.process_size)
+        self._display(content)
+
+    def display(self, r, msg):
+        if msg is None: msg = self.msg
+        completed = int(self.bar_completion_ratio * r)
+        remaining = self.bar_size - completed
+        elapsed = time.time() - self.start_timer
+        units = 'sec/it'
+        try:
+            rem_tim, it_time = elapsed*(self.process_size/r - 1), elapsed/r
+            if it_time < 1: it_time, units = r/elapsed, 'it/sec'
+        except: rem_tim = it_time = 0
+        el = self._time_conversion(elapsed)
+        rm = self._time_conversion(rem_tim)
+        pct = r*100/self.process_size
+
+        content = "%s[%s>%s] %d/%d(%.2f%%) [%s<%s] %.2f%s   \r" % (msg, "="*completed, " "*remaining, r, self.process_size, pct, el, rm, it_time, units)
+        self._display(content)
+
+    def update(self, msg = ''):
+        self.msg = msg
+        #self.display(self.r, msg)
+        #if self.r == self.process_size: self._done()
+        self.r += 1
+
