@@ -216,7 +216,7 @@ class ProgressBar:
             self.bar_completion_ratio  = self.bar_size/self.process_size
             content = self.display(r, msg, resize=True)
         while len(content) < 94:
-            content += " "
+            content = content.strip("\r") + " "
         self._display(content)
 
     def update(self, msg = ''):
