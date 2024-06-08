@@ -148,6 +148,10 @@ class Chart:
 
 
 
+import sys
+import threading
+import os
+
 class ProgressBar:
     def __init__(self, process_size, msg = '', bar_size = 50, output = sys.stdout):
         if process_size == 0: return
@@ -189,10 +193,11 @@ class ProgressBar:
         content = "%s[>%s] 0/%d(00.00%%) [__:__<__:__] __it/sec   \r" % (msg, " "*self.bar_size, self.process_size)
         self._display(content)
 
-    def display(self, r, msg):
+    def display(self, r, msg, resize = False):
         if msg is None: msg = self.msg
         completed = int(self.bar_completion_ratio * r)
         remaining = self.bar_size - completed
+        
         elapsed = time.time() - self.start_timer
         units = 'sec/it'
         try:
@@ -204,11 +209,19 @@ class ProgressBar:
         pct = r*100/self.process_size
 
         content = "%s[%s>%s] %d/%d(%.2f%%) [%s<%s] %.2f%s   \r" % (msg, "="*completed, " "*remaining, r, self.process_size, pct, el, rm, it_time, units)
+        
+        if resize: return content
+        while len(content) > 95:
+            self.bar_size -= 1
+            self.bar_completion_ratio  = self.bar_size/self.process_size
+            content = self.display(r, msg, resize=True)
+        while len(content) < 94:
+            content += " "
         self._display(content)
 
     def update(self, msg = ''):
         self.msg = msg
-        #self.display(self.r, msg)
-        #if self.r == self.process_size: self._done()
         self.r += 1
+
+
 
