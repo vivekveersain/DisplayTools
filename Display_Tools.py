@@ -224,4 +224,25 @@ class ProgressBar:
         self.r += 1
 
 
+import qrcode
 
+def print_qr_code(data, save = None):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=2,  # Adjust for better balance
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    matrix = qr.get_matrix()
+
+    # Print the QR code to the terminal
+    for row in matrix:
+        line = ''.join(['██' if col else '  ' for col in row])
+        print(line)
+    
+    if save:
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(save + ".png")
