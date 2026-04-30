@@ -1,0 +1,70 @@
+{
+  "name": "latex-outline",
+  "displayName": "LaTeX Outline",
+  "description": "Provides a hierarchical outline for LaTeX documents, supporting multi-file navigation.",
+  "version": "0.0.5",
+  "publisher": "vivekarya",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:latex",
+    "onCommand:latex-outline.refresh",
+    "onCommand:latex-outline.revealRange",
+    "onCommand:latexOutline.toggleExpandCollapse"
+  ],
+  "main": "extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "latex",
+        "extensions": [
+          ".tex"
+        ],
+        "aliases": [
+          "LaTeX",
+          "latex"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "latex-outline.refresh",
+        "title": "Refresh LaTeX Outline"
+      },
+      {
+        "command": "latex-outline.revealRange",
+        "title": "Reveal Outline Symbol"
+      },
+      {
+        "command": "latexOutline.toggleExpandCollapse",
+        "title": "Expand/Collapse"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "latexOutlineView",
+          "name": "LaTeX Outline"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "latexOutline.toggleExpandCollapse",
+          "when": "view == latexOutlineView",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  }
+}
